@@ -1,0 +1,58 @@
+<html>
+  <head>
+      <script src="lib/matter.js"></script>
+      <script src="src/es/luis/ssc/util/utilities.js"></script>
+      <script src="src/es/luis/ssc/game/game.js"></script>
+      <script src="src/es/luis/ssc/object/gameObject.js"></script>
+      <script src="src/es/luis/ssc/object/userObject.js"></script>
+      <script src="src/es/luis/ssc/object/sceneObject.js"></script>
+      <script src="src/es/luis/ssc/object/bullet.js"></script>
+      <script src="src/es/luis/ssc/assets/predefinedObjects.js"></script>
+      <script src="src/es/luis/ssc/services/objectFactory.js"></script>
+      <script src="src/es/luis/ssc/services/userFactory.js"></script>
+      <script src="src/es/luis/ssc/services/sceneFactory.js"></script>
+      <script src="src/es/luis/ssc/services/stageFactory.js"></script>
+      
+      
+      <style type="text/css">
+        canvas { border: 1px solid black;
+                  
+                   }
+        .element { border: 1px solid black; }
+      </style>
+    
+  </head>
+  <body>
+    <canvas id="world" width="600" height="600"></canvas>
+    <div id="botonera">
+      <div class="element" id="wheel">WHEEL
+        Radius:<input id="radius"/>
+      </div>
+      <div class="element" id="fuselage">FUSELAGE
+        Height:<input id="height"/>
+        Width:<input id="width"/>
+      </div>
+      <div class="element" id="core">CORE
+        Height:<input id="height"/>
+        Width:<input id="width"/>
+      </div>
+      <div class="element" id="engine">ENGINE
+          Height:<input id="height"/>
+          Width:<input id="width"/>
+      </div>
+      <div class="element" id="weapon">WEAPON
+          Height:<input id="height"/>
+          Width:<input id="width"/>
+      </div>
+      <div class="element" id="wire">WIRE
+      </div>
+      <div class="element" id="init">init
+        </div>
+      <div class="element" id="edit">edit
+        </div>
+    </div>
+    <script src="src/es/luis/ssc/stage/stage.js"></script>   
+    <script src="src/es/luis/ssc/stage/editorStage.js"></script> 
+    <script src="src/gameEngine.js"></script>
+  </body>
+</html>

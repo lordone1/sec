@@ -1,4 +1,28 @@
 var GameEngine={
+    EventListener:{
+        listeners:new Map(),
+        add:function(eventName,callback){
+            this.listeners.set(eventName,callback);
+        },
+        process:function(events){
+            var event;
+            while ((event=events.pop())!=undefined){
+                var callback=this.listeners.get(event.eventName);
+                if (callback != undefined){
+                    callback(event.on);
+                }
+           }
+        }
+    },
+    Event:{
+        events:[], //eventName,callback
+        add:function(eventName,object){
+            this.events.push({eventName:eventName,on:object});
+        },
+        getEvents:function(){
+            return this.events;
+        }
+    },
     Engine:{
         create:function(world){
             console.log('createEngine');

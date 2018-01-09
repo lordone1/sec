@@ -1,52 +1,14 @@
 var GameEngine={
-    EventListener:{
-        listeners:new Map(),
-        add:function(eventName,callback){
-            this.listeners.set(eventName,callback);
-        },
-        process:function(events){
-            var event;
-            while ((event=events.pop())!=undefined){
-                var callback=this.listeners.get(event.eventName);
-                if (callback != undefined){
-                    callback(event.on);
-                }
-           }
-        }
-    },
-    Event:{
-        events:[], //eventName,callback
-        add:function(eventName,object){
-            this.events.push({eventName:eventName,on:object});
-        },
-        getEvents:function(){
-            return this.events;
-        }
-    },
     Engine:{
-        create:function(world){
-            console.log('createEngine');
+        create:function(world,render){
             var engine={
                 run:function(){
-                    console.log('run');
-                    this.init();
                     this.mainLoop();
-                    this.finalize();
-                },
-                init:function(){
-                    console.log('init');
-                    this.render=GameEngine.Render.create(world);
+                    window.requestAnimationFrame(this.mainLoop);
                 },
                 mainLoop: function(){
-                    console.log('mainLoop');
-                    this.update();
-                    this.render.render();
-                },
-                update:function(){
-                    console.log('update');
-                },
-                finalize:function(){
-                    console.log('finalize');
+                    render.render();
+                    world.eventEngine.process();
                 }
             }
             return engine;
@@ -54,25 +16,45 @@ var GameEngine={
     },
     Render:{
         create:function(world){
-            console.log('createRender');
             var render={
                     render:function(){
-                        console.log('render');
                         world.objects.forEach(object => {
-                            console.log(object);
                     });
                 }
             }
             return render;
         }
     },
-    World:{
+    EventEngine:{
         create:function(){
-            console.log('createWorld')
+            var eventEngine={
+                listeners:new Map(),
+                events:[],
+                addEvent:function(eventName,object){
+                    this.events.push({eventName:eventName,on:object});
+                },
+                addListener:function(eventName,callback){
+                    this.listeners.set(eventName,callback);
+                },
+                process:function(){
+                    var event;
+                    while ((event=this.events.pop())!=undefined){
+                        var callback=this.listeners.get(event.eventName);
+                        if (callback != undefined){
+                            callback(event.on);
+                        }
+                   }
+                }
+            }
+            return eventEngine;
+        }
+    },
+    World:{
+        create:function(eventEngine){
             var world={
                 objects:[],
+                eventEngine:eventEngine,
                 addObject:function(object){
-                    console.log('addObjects');
                     this.objects.push(object);
                 }
             }

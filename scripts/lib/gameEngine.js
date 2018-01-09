@@ -4,13 +4,14 @@ var GameEngine={
             var engine={
                 phisicEngine:Matter.Engine.create(),
                 run:function(){
-                    this.init();
+                    
                     function mainLoop(){
-                        render.render();
                         world.eventEngine.process();
+                        render.render();
                         window.requestAnimationFrame(mainLoop);
                     };
-                    mainLoop();
+                    this.init();
+                    window.requestAnimationFrame(mainLoop);
                 },
                 init:function(){
                     world.composites.forEach(composite => {
@@ -27,7 +28,6 @@ var GameEngine={
             var render={
                     render:function(){
                         world.composites.forEach(composite => {
-                            //console.log(composite);
                     });
                 }
             }

@@ -2,13 +2,21 @@ var GameEngine={
     Engine:{
         create:function(world,render){
             var engine={
+                phisicEngine:Matter.Engine.create(),
                 run:function(){
-                    this.mainLoop();
-                    window.requestAnimationFrame(this.mainLoop);
+                    this.init();
+                    function mainLoop(){
+                        render.render();
+                        world.eventEngine.process();
+                        window.requestAnimationFrame(mainLoop);
+                    };
+                    mainLoop();
                 },
-                mainLoop: function(){
-                    render.render();
-                    world.eventEngine.process();
+                init:function(){
+                    world.composites.forEach(composite => {
+                        phisicEngine.add(phisicEngine.world,composite);
+                    });
+                    Matter.Engine.run(this.phisicEngine);
                 }
             }
             return engine;
@@ -18,7 +26,8 @@ var GameEngine={
         create:function(world){
             var render={
                     render:function(){
-                        world.objects.forEach(object => {
+                        world.composites.forEach(composite => {
+                            //console.log(composite);
                     });
                 }
             }
@@ -51,11 +60,12 @@ var GameEngine={
     },
     World:{
         create:function(eventEngine){
+
             var world={
-                objects:[],
+                composites:[],
                 eventEngine:eventEngine,
-                addObject:function(object){
-                    this.objects.push(object);
+                addComposite:function(composite){
+                    this.composites.push(composite);
                 }
             }
             return world;

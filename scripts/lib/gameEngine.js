@@ -56,18 +56,31 @@ var GameEngine={
             var eventEngine={
                 listeners:new Map(),
                 events:[],
-                addEvent:function(eventName,object){
-                    this.events.push({eventName:eventName,on:object});
+                addEvent:function(eventName,eventData){
+                    this.events.push({eventName:eventName,eventData:eventData});
                 },
-                addListener:function(eventName,callback){
-                    this.listeners.set(eventName,callback);
+                addListener:function(eventName,callback,object){
+                    var currentObject=this.listeners.get(eventName);
+                    
+                    if (currentObject!=null){ //if exists we add the event to the map.
+                        currentObject.push({callback:callback,object:object});
+                        this.listeners.set(eventName,currentObject)
+                    }
+                    else{
+                        var newObject=[];
+                        newObject.push({callback:callback,object:object});
+                        this.listeners.set(eventName,newObject);
+                    }
+                    
                 },
                 process:function(){
                     var event;
                     while ((event=this.events.pop())!=undefined){
-                        var callback=this.listeners.get(event.eventName);
-                        if (callback != undefined){
-                            callback(event.on);
+                        var callbacks=this.listeners.get(event.eventName);
+                        if (callbacks != undefined){
+                            callbacks.forEach(callback => {
+                                callback.callback(event.eventData,callback.object);
+                            });
                         }
                    }
                 }

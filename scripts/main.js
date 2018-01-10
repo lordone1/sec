@@ -6,11 +6,14 @@ var render=GameEngine.Render.create(world,ctx,canvas);
 var engine=GameEngine.Engine.create(world,render);
 
 
-eventEngine.addListener('create',function(world){
+eventEngine.addListener('create',function(event,world){
     var composite=Matter.Composite.create();
-    Matter.Composite.add(composite,Matter.Bodies.rectangle(100,10,10,10));
+    Matter.Composite.add(composite,Matter.Bodies.rectangle(event.pageX,event.pageY,10,10));
     world.addUserComposite(composite);
+},world);
+
+canvas.addEventListener('click',function(event){
+    eventEngine.addEvent('create',event);
 });
 
-eventEngine.addEvent('create',this.world);
 engine.run();

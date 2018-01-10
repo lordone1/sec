@@ -2,9 +2,7 @@ var GameEngine={
     Engine:{
         create:function(world,render){
             var engine={
-                phisicEngine:Matter.Engine.create(),
                 run:function(){
-                    
                     function mainLoop(){
                         world.eventEngine.process();
                         render.render();
@@ -14,22 +12,41 @@ var GameEngine={
                     window.requestAnimationFrame(mainLoop);
                 },
                 init:function(){
-                    world.composites.forEach(composite => {
-                        phisicEngine.add(phisicEngine.world,composite);
-                    });
-                    Matter.Engine.run(this.phisicEngine);
+                    Matter.Engine.run(world.phisicEngine);
                 }
             }
             return engine;
         }
     },
     Render:{
-        create:function(world){
+        create:function(world,ctx,canvas){
             var render={
                     render:function(){
-                        world.composites.forEach(composite => {
-                    });
-                }
+                        function renderComposite(composite){
+                            Matter.Composite.allBodies(composite).forEach(body => {
+                                ctx.beginPath();
+                                var radius=composite.radius;
+                                if (radius!=null){
+                                    ctx.arc(vector.x,vector.y,radius,0,2*Math.PI);
+                                }
+                                else{
+                                    body.vertices.forEach(vector => {
+                                            ctx.lineTo(vector.x,vector.y);          
+                                    });
+                                }
+                                ctx.closePath();
+                                ctx.stroke();
+                            });
+                                        
+                        }
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        world.sceneComposites.forEach(composite => {
+                            renderComposite(composite);
+                        });
+                        world.userComposites.forEach(composite => {
+                            renderComposite(composite);
+                        });
+                    }
             }
             return render;
         }
@@ -62,10 +79,17 @@ var GameEngine={
         create:function(eventEngine){
 
             var world={
-                composites:[],
+                userComposites:[],
+                sceneComposites:[],
                 eventEngine:eventEngine,
-                addComposite:function(composite){
-                    this.composites.push(composite);
+                phisicEngine:Matter.Engine.create(),
+                addUserComposite:function(composite){
+                    Matter.World.addComposite(this.phisicEngine.world,composite);
+                    this.userComposites.push(composite);
+                },
+                addSceneComposite:function(composite){
+                    Matter.World.addComposite(this.phisicEngine.world,composite);
+                    this.sceneComposites.push(composite);
                 }
             }
             return world;
